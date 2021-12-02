@@ -1,0 +1,5 @@
+`go run . all` from each day's directory.
+
+day0 can be used a template for new days.
+
+Helpful utils, especially for parsing files, in lib
