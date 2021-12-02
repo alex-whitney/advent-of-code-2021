@@ -39,3 +39,17 @@ func ReadIntegerFile(relativePath string) ([]int, error) {
 
 	return nums, nil
 }
+
+func ReadDelimitedFile(relativePath string, delimiter string) ([][]string, error) {
+	arr, err := ReadStringFile(relativePath)
+	if err != nil {
+		return nil, err
+	}
+
+	lines := make([][]string, len(arr))
+	for i, row := range arr {
+		lines[i] = strings.Split(row, delimiter)
+	}
+
+	return lines, nil
+}

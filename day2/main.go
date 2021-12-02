@@ -3,17 +3,16 @@ package main
 import (
 	"errors"
 	"strconv"
-	"strings"
 
 	"github.com/alex-whitney/advent-of-code-2021/lib"
 )
 
 type Today struct {
-	instructions []string
+	instructions [][]string
 }
 
 func (d *Today) init() {
-	lines, err := lib.ReadStringFile("./input.txt")
+	lines, err := lib.ReadDelimitedFile("./input.txt", " ")
 	if err != nil {
 		panic(err)
 	}
@@ -24,18 +23,12 @@ func (d *Today) Part1() (string, error) {
 	x := 0
 	y := 0
 	for _, line := range d.instructions {
-		if line == "" {
-			continue
-		}
-
-		parts := strings.Split(line, " ")
-
-		num, err := strconv.Atoi(parts[1])
+		num, err := strconv.Atoi(line[1])
 		if err != nil {
 			return "", err
 		}
 
-		switch parts[0] {
+		switch line[0] {
 		case "forward":
 			x = x + num
 		case "up":
@@ -43,7 +36,7 @@ func (d *Today) Part1() (string, error) {
 		case "down":
 			y = y + num
 		default:
-			return "", errors.New("unknown direction: " + parts[0])
+			return "", errors.New("unknown direction: " + line[0])
 		}
 	}
 
@@ -55,18 +48,12 @@ func (d *Today) Part2() (string, error) {
 	y := 0
 	aim := 0
 	for _, line := range d.instructions {
-		if line == "" {
-			continue
-		}
-
-		parts := strings.Split(line, " ")
-
-		num, err := strconv.Atoi(parts[1])
+		num, err := strconv.Atoi(line[1])
 		if err != nil {
 			return "", err
 		}
 
-		switch parts[0] {
+		switch line[0] {
 		case "forward":
 			x = x + num
 			y = y + aim*num
@@ -75,7 +62,7 @@ func (d *Today) Part2() (string, error) {
 		case "down":
 			aim = aim + num
 		default:
-			return "", errors.New("unknown direction: " + parts[0])
+			return "", errors.New("unknown direction: " + line[0])
 		}
 	}
 
