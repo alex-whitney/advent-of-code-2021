@@ -10,8 +10,20 @@ import (
 )
 
 type Day interface {
+	Init(string) error
 	Part1() (string, error)
 	Part2() (string, error)
+}
+
+func initialize(d Day, c *cli.Context) {
+	file := "input"
+	if c.Args().Len() > 0 {
+		file = c.Args().Get(0)
+	}
+	err := d.Init("/" + file + ".txt")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func runPart1WithTimings(d Day) {
@@ -51,6 +63,7 @@ func Run(day Day) {
 				Name:  "part1",
 				Usage: "run part 1",
 				Action: func(c *cli.Context) error {
+					initialize(day, c)
 					runPart1WithTimings(day)
 					return nil
 				},
@@ -59,6 +72,7 @@ func Run(day Day) {
 				Name:  "part2",
 				Usage: "run part 2",
 				Action: func(c *cli.Context) error {
+					initialize(day, c)
 					runPart1WithTimings(day)
 					return nil
 				},
@@ -67,6 +81,7 @@ func Run(day Day) {
 				Name:  "all",
 				Usage: "run both parts",
 				Action: func(c *cli.Context) error {
+					initialize(day, c)
 					runPart1WithTimings(day)
 					fmt.Println()
 					runPart2WithTimings(day)

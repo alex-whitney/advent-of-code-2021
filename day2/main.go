@@ -11,12 +11,13 @@ type Today struct {
 	instructions [][]string
 }
 
-func (d *Today) init() {
-	lines, err := lib.ReadDelimitedFile("./input.txt", " ")
+func (d *Today) Init(file string) error {
+	lines, err := lib.ReadDelimitedFile(file, " ")
 	if err != nil {
-		panic(err)
+		return err
 	}
 	d.instructions = lines
+	return nil
 }
 
 func (d *Today) Part1() (string, error) {
@@ -71,6 +72,5 @@ func (d *Today) Part2() (string, error) {
 
 func main() {
 	day := &Today{}
-	day.init()
 	lib.Run(day)
 }

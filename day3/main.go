@@ -39,12 +39,14 @@ type Today struct {
 	input []string
 }
 
-func (d *Today) init() {
-	in, err := lib.ReadStringFile("/input.txt")
+func (d *Today) Init(input string) error {
+	in, err := lib.ReadStringFile(input)
 	if err != nil {
-		panic(err)
+		return err
 	}
+
 	d.input = in
+	return nil
 }
 
 func (d *Today) Part1() (string, error) {
@@ -108,6 +110,5 @@ func (d *Today) Part2() (string, error) {
 
 func main() {
 	day := &Today{}
-	day.init()
 	lib.Run(day)
 }

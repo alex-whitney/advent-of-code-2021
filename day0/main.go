@@ -7,6 +7,10 @@ import (
 type Today struct {
 }
 
+func (d *Today) Init(input string) error {
+	return nil
+}
+
 func (d *Today) Part1() (string, error) {
 	return "Hello", nil
 }

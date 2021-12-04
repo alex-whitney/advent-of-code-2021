@@ -1,4 +1,5 @@
 `go run . all` from each day's directory.
+`go run . all sample` to load a file called "sample.txt" and execute
 
 day0 can be used a template for new days.
 
