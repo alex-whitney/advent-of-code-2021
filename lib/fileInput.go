@@ -9,14 +9,24 @@ import (
 )
 
 /// ReadStringFile reads a file and parses it as an array of strings
-func ReadStringFile(relativePath string) ([]string, error) {
+func ReadFile(relativePath string) (string, error) {
 	pwd, _ := os.Getwd()
 	data, err := os.ReadFile(filepath.Join(pwd, relativePath))
+	if err != nil {
+		return "", err
+	}
+
+	return string(data), nil
+}
+
+/// ReadStringFile reads a file and parses it as an array of strings
+func ReadStringFile(relativePath string) ([]string, error) {
+	file, err := ReadFile(relativePath)
 	if err != nil {
 		return nil, err
 	}
 
-	return strings.Split(string(data), "\n"), nil
+	return strings.Split(file, "\n"), nil
 }
 
 /// ReadIntegerFile reads a file containing ints - one per line
