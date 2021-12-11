@@ -1,10 +1,21 @@
 package lib
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 type Point struct {
 	X int
 	Y int
+}
+
+func NewPoint(x int, y int) *Point {
+	return &Point{X: x, Y: y}
+}
+
+func (p *Point) Hash() string {
+	return fmt.Sprintf("%d,%d", p.X, p.Y)
 }
 
 func AbsInt(val int) int {
