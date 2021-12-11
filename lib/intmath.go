@@ -2,6 +2,11 @@ package lib
 
 import "math"
 
+type Point struct {
+	X int
+	Y int
+}
+
 func AbsInt(val int) int {
 	if val < 0 {
 		return -val
