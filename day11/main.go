@@ -7,7 +7,7 @@ import (
 )
 
 type Today struct {
-	input [][]int
+	input lib.IntMatrix
 }
 
 func (d *Today) Init(input string) error {
@@ -16,15 +16,9 @@ func (d *Today) Init(input string) error {
 		return err
 	}
 
-	d.input = make([][]int, len(in))
-	for i, row := range in {
-		d.input[i] = make([]int, len(row))
-		for j, val := range row {
-			d.input[i][j], err = strconv.Atoi(string(val))
-			if err != nil {
-				return err
-			}
-		}
+	d.input, err = lib.NewIntMatrix(in, "")
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -46,13 +40,7 @@ func reset(state [][]int) {
 }
 
 func (d *Today) Part1() (string, error) {
-	state := make([][]int, len(d.input))
-	for r, row := range d.input {
-		state[r] = make([]int, len(row))
-		for c, val := range row {
-			state[r][c] = val
-		}
-	}
+	state := d.input.Copy()
 
 	flashes := 0
 	for step := 0; step < 100; step++ {
@@ -84,11 +72,9 @@ func (d *Today) Part1() (string, error) {
 
 						r := p.X + dr
 						c := p.Y + dc
-						if r >= 0 && r < 10 && c >= 0 && c < 10 {
-							if inc(state, r, c) {
-								p := lib.NewPoint(r, c)
-								newFlashes2[p.Hash()] = p
-							}
+						if state.InBounds(r, c) && inc(state, r, c) {
+							p := lib.NewPoint(r, c)
+							newFlashes2[p.Hash()] = p
 						}
 					}
 				}
@@ -105,13 +91,7 @@ func (d *Today) Part1() (string, error) {
 }
 
 func (d *Today) Part2() (string, error) {
-	state := make([][]int, len(d.input))
-	for r, row := range d.input {
-		state[r] = make([]int, len(row))
-		for c, val := range row {
-			state[r][c] = val
-		}
-	}
+	state := d.input.Copy()
 
 	allFlashed := false
 	counter := 0
@@ -144,11 +124,9 @@ func (d *Today) Part2() (string, error) {
 
 						r := p.X + dr
 						c := p.Y + dc
-						if r >= 0 && r < 10 && c >= 0 && c < 10 {
-							if inc(state, r, c) {
-								p := lib.NewPoint(r, c)
-								newFlashes2[p.Hash()] = p
-							}
+						if state.InBounds(r, c) && inc(state, r, c) {
+							p := lib.NewPoint(r, c)
+							newFlashes2[p.Hash()] = p
 						}
 					}
 				}

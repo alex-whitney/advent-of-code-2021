@@ -20,19 +20,13 @@ func (d *Today) Init(input string) error {
 		return err
 	}
 
-	d.lenX = len(rows)
-	d.lenY = len(rows[0])
-
-	d.input = make([][]int, d.lenX)
-	for r, row := range rows {
-		d.input[r] = make([]int, d.lenY)
-		for c, char := range row {
-			d.input[r][c], err = strconv.Atoi(string(char))
-			if err != nil {
-				return err
-			}
-		}
+	d.input, err = lib.NewIntMatrix(rows, "")
+	if err != nil {
+		return err
 	}
+
+	d.lenX = len(d.input)
+	d.lenY = len(d.input[0])
 
 	return nil
 }
