@@ -10,25 +10,32 @@ import (
 type Node struct {
 	Id        string
 	Connected []*Node
+
+	isBig   bool
+	isEnd   bool
+	isStart bool
 }
 
 func NewNode(id string) *Node {
 	return &Node{
 		Id:        id,
 		Connected: []*Node{},
+		isBig:     strings.ToUpper(id) == id,
+		isEnd:     id == "end",
+		isStart:   id == "start",
 	}
 }
 
 func (node *Node) IsBig() bool {
-	return strings.ToUpper(node.Id) == node.Id
+	return node.isBig
 }
 
 func (node *Node) IsEnd() bool {
-	return node.Id == "end"
+	return node.isEnd
 }
 
 func (node *Node) IsStart() bool {
-	return node.Id == "start"
+	return node.isStart
 }
 
 type Today struct {
