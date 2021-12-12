@@ -16,6 +16,8 @@ type Day interface {
 }
 
 func initialize(d Day, c *cli.Context) {
+	start := time.Now()
+
 	file := "input"
 	if c.Args().Len() > 0 {
 		file = c.Args().Get(0)
@@ -24,6 +26,9 @@ func initialize(d Day, c *cli.Context) {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println("======")
+	fmt.Printf("Initialized in %dms\n", time.Since(start).Milliseconds())
 }
 
 func runPart1WithTimings(d Day) {
@@ -73,6 +78,7 @@ func Run(day Day) {
 				Usage: "run part 2",
 				Action: func(c *cli.Context) error {
 					initialize(day, c)
+					fmt.Println()
 					runPart1WithTimings(day)
 					return nil
 				},
@@ -82,6 +88,7 @@ func Run(day Day) {
 				Usage: "run both parts",
 				Action: func(c *cli.Context) error {
 					initialize(day, c)
+					fmt.Println()
 					runPart1WithTimings(day)
 					fmt.Println()
 					runPart2WithTimings(day)
