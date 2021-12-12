@@ -92,31 +92,31 @@ func (d *Today) walk(paths []string, currentPath string, currentNode *Node) []st
 	return paths
 }
 
+type PathMap map[*Node]int
+
 // returns:
 //  - If the node can be visited
 //  - If this path has duplicate small nodes after the addition of this node
-func (d *Today) canVisit(path string, hasDuplicate bool, node *Node) (bool, bool) {
-	if node.IsBig() || node.IsEnd() || node.IsStart() || !pathContains(path, node.Id) {
+func (d *Today) canVisit(path PathMap, hasDuplicate bool, node *Node) (bool, bool) {
+	if node.IsBig() || node.IsEnd() || node.IsStart() || path[node] == 0 {
 		return true, hasDuplicate
 	}
 
 	// node is small, path has the node already
 
-	if hasDuplicate {
-		return false, hasDuplicate
-	}
-
-	return true, true
+	return !hasDuplicate, true
 }
 
-func (d *Today) walk2(paths []string, currentPath string, hasDupe bool, currentNode *Node) []string {
+func (d *Today) walk2(paths int, currentPath PathMap, hasDupe bool, currentNode *Node) int {
+	// the actual paths don't matter. just count the distinct paths taken
 	if currentNode.IsEnd() {
-		paths = append(paths, currentPath+"end")
+		return paths + 1
 	} else if canVisit, willHaveDupe := d.canVisit(currentPath, hasDupe, currentNode); canVisit {
-		currentPath = currentPath + currentNode.Id + ","
+		currentPath[currentNode]++
 		for _, node := range currentNode.Connected {
 			paths = d.walk2(paths, currentPath, willHaveDupe, node)
 		}
+		currentPath[currentNode]--
 	}
 
 	return paths
@@ -130,10 +130,9 @@ func (d *Today) Part1() (string, error) {
 }
 
 func (d *Today) Part2() (string, error) {
-	paths := make([]string, 0)
-	paths = d.walk2(paths, "", false, d.nodes["start"])
+	paths := d.walk2(0, make(PathMap), false, d.nodes["start"])
 
-	return strconv.Itoa(len(paths)), nil
+	return strconv.Itoa(paths), nil
 }
 
 func main() {
