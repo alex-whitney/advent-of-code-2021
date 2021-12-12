@@ -85,33 +85,30 @@ func (d *Today) walk(paths []string, currentPath string, currentNode *Node) []st
 	return paths
 }
 
-func (d *Today) canVisit(path string, node *Node) bool {
+// returns:
+//  - If the node can be visited
+//  - If this path has duplicate small nodes after the addition of this node
+func (d *Today) canVisit(path string, hasDuplicate bool, node *Node) (bool, bool) {
 	if node.IsBig() || node.IsEnd() || node.IsStart() || !pathContains(path, node.Id) {
-		return true
+		return true, hasDuplicate
 	}
 
-	// look for two small caves already on path - otherwise, this small node can be added
-	counts := make(map[string]int)
-	ids := strings.Split(path, ",")
-	for _, id := range ids[:len(ids)-1] {
-		// start and end aren't big, but appear at most once
-		if !d.nodes[id].IsBig() {
-			counts[id]++
-			if counts[id] > 1 {
-				return false
-			}
-		}
+	// node is small, path has the node already
+
+	if hasDuplicate {
+		return false, hasDuplicate
 	}
-	return true
+
+	return true, true
 }
 
-func (d *Today) walk2(paths []string, currentPath string, currentNode *Node) []string {
+func (d *Today) walk2(paths []string, currentPath string, hasDupe bool, currentNode *Node) []string {
 	if currentNode.IsEnd() {
 		paths = append(paths, currentPath+"end")
-	} else if d.canVisit(currentPath, currentNode) {
+	} else if canVisit, willHaveDupe := d.canVisit(currentPath, hasDupe, currentNode); canVisit {
 		currentPath = currentPath + currentNode.Id + ","
 		for _, node := range currentNode.Connected {
-			paths = d.walk2(paths, currentPath, node)
+			paths = d.walk2(paths, currentPath, willHaveDupe, node)
 		}
 	}
 
@@ -127,7 +124,7 @@ func (d *Today) Part1() (string, error) {
 
 func (d *Today) Part2() (string, error) {
 	paths := make([]string, 0)
-	paths = d.walk2(paths, "", d.nodes["start"])
+	paths = d.walk2(paths, "", false, d.nodes["start"])
 
 	return strconv.Itoa(len(paths)), nil
 }
